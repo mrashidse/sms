@@ -1,6 +1,12 @@
 # School Management System (SMS)
-## Example app to use laravel with Docker
- 
+## Example app to understand usage of laravel app with Docker containers
+
+
+# Frequently used Docker CMDs  
+## ===========================================================================================================
+## Followings are some frequently used docker cmmds
+## ===========================================================================================================
+
 # Docker Images list
 ## ================================================================================ 
     \> docker images
