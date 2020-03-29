@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+  laravel-web:
+    build: 
+      context: .
+      args:
+        uid: ${UID}
+    image: laravel7/sms-web-app:1.0.0
+    depends_on:
+      - mysql-db
+      - redis-cache
+    networks:
+      - frontend
+      - backend
+    environment:
+      - MYSQL_HOST=moe-mysql-app
+      - MYSQL_USER=moeuser
+      - MYSQL_PASSWORD=moepass
+      - MYSQL_DB=moe_db
+      - APACHE_RUN_USER=#${UID}
+      - APACHE_RUN_GROUP=#${UID}
+    volumes:
+      - ./www/:/var/www/html/
+    ports:
+      # - "30001:80"
+      - "${HOST_PORT}:80"
+    container_name: sms-web-app
+
+  mysql-db:
+    image: mysql:5.7
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root987654
+      - MYSQL_USER=rasUser
+      - MYSQL_PASSWORD=ras654321 
+      - MYSQL_DATABASE=sms_db
+    container_name: sms-mysql-app
+
+  redis-cache:
+    image: redis:alpine
+    ports:
+      # - "6379"
+      - "6363:6379"
+    networks:
+      - frontend
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    depends_on:
+      - mysql-db
+    networks:
+      - backend
+    ports:
+      - "30002:80"
+    environment:
+      - PMA_HOST=moe-mysql-app
+      - PMA_PORT= 3306
+    volumes:
+      - /sessions
+    container_name: sms-phpmyadmin-app
+networks:
+  frontend:
+  backend:
