@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     libmcrypt-dev \
     libpng-dev \
     libreadline-dev \
+    libzip-dev \
+    libonig-dev \
     sudo \
     unzip \
     zip \
@@ -58,7 +60,8 @@ RUN mkdir -p /home/devuser/.composer && \
 
 
 COPY www/ /var/www/html
-RUN cd /var/www/html && composer install && php artisan key:generate
+RUN cd /var/www/html && cp .env.example .env
+RUN composer install && php artisan key:generate && php artisan migrate && php artisan db:seed 
 
 # =============================
 # RUN docker-php-ext-install mysqli pdo_mysql

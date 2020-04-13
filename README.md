@@ -30,6 +30,13 @@
 #### For Win Shell
     \> docker run -d -it -p 30001:80 --name "moe-php-mysql-app" -v /www:/var/www/html amakundu/moe-php-mysql-demo:1.0.0
 
+#### If Errors ()
+##### error during connect: Get http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.30/info: open //./pipe/docker_engine: The system cannot find the file specified. In the default daemon configuration on Windows, 
+the docker client must be run elevated to connect. This error may also indicate that the docker daemon is not running.
+
+    \> Net stop com.docker.service
+    \> Net start com.docker.service
+
 # To see running container
 ## ================================================================================ 
     \> docker ps
@@ -41,6 +48,9 @@
 # Doker Compose
 ## ================================================================================ 
     \> docker-compose up --build
+    \>  docker-compose --env-file ./www/.env  up -d
+
+    \> docker-compose down 
 
 # Open a shell inside the running container
 ## ================================================================================ 

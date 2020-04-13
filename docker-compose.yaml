@@ -1,11 +1,13 @@
 version: "3.7"
 services:
   laravel-web:
+    # env_file:
+    #    - ./www/laravel-web/.env
     build: 
       context: .
       args:
         uid: ${UID}
-    image: laravel7/sms-web-app:1.0.0
+    image: laravel7/sms-web-app:${TAG}
     depends_on:
       - mysql-db
       - redis-cache
@@ -13,10 +15,10 @@ services:
       - frontend
       - backend
     environment:
-      - MYSQL_HOST=moe-mysql-app
-      - MYSQL_USER=moeuser
-      - MYSQL_PASSWORD=moepass
-      - MYSQL_DB=moe_db
+      - MYSQL_HOST=sms-mysql-app
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DB=${DB_DATABASE}
       - APACHE_RUN_USER=#${UID}
       - APACHE_RUN_GROUP=#${UID}
     volumes:
@@ -31,10 +33,10 @@ services:
     networks:
       - backend
     environment:
-      - MYSQL_ROOT_PASSWORD=root987654
-      - MYSQL_USER=rasUser
-      - MYSQL_PASSWORD=ras654321 
-      - MYSQL_DATABASE=sms_db
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD} 
+      - MYSQL_DATABASE=${DB_DATABASE}
     container_name: sms-mysql-app
 
   redis-cache:
@@ -61,8 +63,8 @@ services:
     ports:
       - "30002:80"
     environment:
-      - PMA_HOST=moe-mysql-app
-      - PMA_PORT= 3306
+      - PMA_HOST=sms-mysql-app
+      - PMA_PORT=${DB_PORT}
     volumes:
       - /sessions
     container_name: sms-phpmyadmin-app
